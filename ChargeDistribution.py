@@ -3,7 +3,6 @@
 10/9/2020 - Thomas L. Johnson
 """
 
-#import math as math
 import numpy as np
 import sympy as sp
 
@@ -106,6 +105,8 @@ class Solenoid:
                     self.ymin = y
                 
                 i+=1
+                j+=1
+                z+=dh
                     
                 
             if (z > self.zmax):
@@ -113,7 +114,7 @@ class Solenoid:
             if (z < self.zmin):
                 self.zmin = z
                     
-            z+=dh
+            
     
 if __name__ == "__main__":    
     print ("\nLineCharge(10,0.5)\n")
