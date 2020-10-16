@@ -6,6 +6,7 @@ Created on Fri Oct  9 17:30:00 2020
 
 Utility methods to generate arrays of 3D positions that approximate common  
 geometric shapes. Iterating over the "path" array is like following a current.
+
 """
 
 import numpy as np
@@ -61,12 +62,12 @@ class Loop:
                 self.ymin = y
                     
 class Solenoid:
-    def __init__(self, r, minHeight, dh, dtheta):
+    def __init__(self, r, h, dh, dtheta):
         # todo: shift down on z-axis to center on origin
         # todo: emulate toroid logic to ensure exact height rather than min
         
         thetaIncrements = int(((2*sp.pi)/dtheta)) 
-        zIncrements = int(minHeight/dh) + 1
+        zIncrements = int(h/dh) + 1
         
         self.stepCount = thetaIncrements * zIncrements
         self.path = np.zeros((self.stepCount, 3))               
@@ -81,14 +82,17 @@ class Solenoid:
         z = 0
         i = 0
         for j in range(0, zIncrements):
+            currentH = j*dh
+            nextH = (j+1)*dh
             
-            # todo: wrap all the way around to 2pi on the last j iteration?
-                
+            dH = (nextH-currentH)
+               
             for k in range(0, thetaIncrements):
                                
                 theta = (2 * k * sp.pi) / (thetaIncrements)     
                 x = r*sp.cos(theta)
                 y = r*sp.sin(theta)
+                z = currentH + dH*(k/thetaIncrements)
                 
                 self.path[i] = (x, y, z)
                                 
@@ -101,10 +105,7 @@ class Solenoid:
                 if (y < self.ymin):
                     self.ymin = y
                 
-                i+=1
-                j+=1
-                z+=dh
-                    
+                i+=1                    
                 
             if (z > self.zmax):
                 self.zmax = z
@@ -135,7 +136,7 @@ class Toroid:
         for j in range(0, phiIncrements):
             phi = (2 * j * sp.pi) / (phiIncrements) 
             nextPhi = (2 * (j+1) * sp.pi) / (phiIncrements)            
-            currentPhi = phi
+#            currentPhi = phi
             
             dPhi = (nextPhi-phi)
             
@@ -223,8 +224,8 @@ if __name__ == "__main__":
     for i in range(0, currentPath.stepCount):   
         print (str(currentPath.path[i]))
     
-    print ("\nSolenoid(10, 2, 0.5, sp.pi/2)\n")
-    currentPath = Solenoid(10, 2, 0.5, sp.pi/2)   
+    print ("\nSolenoid(1, 1, 0.5, sp.pi/2)\n")
+    currentPath = Solenoid(1, 1, 0.5, sp.pi/2)   
     
     for i in range(0, currentPath.stepCount):   
         print (str(currentPath.path[i]))
