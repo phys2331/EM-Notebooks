@@ -37,7 +37,7 @@ def BiotSavart(I, dL, r_hat, r_mag):
 
 # create a current path
 current = path.Line(1, 0.1)
-current.magnitude = 1 #[T]
+current.magnitude = 1                     # [A]
 
 
 # create points of interest
